@@ -1,1 +1,16 @@
-# wp-cli
+## WP CLI Learning
+
+### This is simple WP CLI repo for learning purpose, which I have created.
+
+If you want to learn something more you can simply fork this repo and update accorging to you.
+
+Add this repo in your theme root, and add below code to your `functions.php` to just load the `wp-cli` directory.
+
+```
+/**
+ * Add dependency file for WP-CLI
+ */
+require_once 'wp-cli/wp-cli-commands.php';
+```
+
+> Check the [wp-cli](https://make.wordpress.org/cli/handbook/) and [Handbook](https://make.wordpress.org/cli/handbook/) for more details.
