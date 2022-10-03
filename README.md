@@ -13,4 +13,4 @@ Add this repo in your theme root, and add below code to your `functions.php` to 
 require_once 'wp-cli/wp-cli-commands.php';
 ```
 
-> Check the [wp-cli](https://make.wordpress.org/cli/handbook/) and [Handbook](https://make.wordpress.org/cli/handbook/) for more details.
+> Check the [wp-cli Handbook](https://make.wordpress.org/cli/handbook/) and [Commands Cookbook](https://make.wordpress.org/cli/handbook/guides/commands-cookbook/) for more details.
