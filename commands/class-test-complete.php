@@ -19,13 +19,24 @@ class Test_Complete {
 	 * ## EXAMPLES
 	 * 
 	 *      # Complete the test.
-	 *      $ wp test update
+	 *      $ wp test update-test
 	 *      Success: Test Completed!!!
 	 * 
 	 * @subcommand update-test
 	 * 
 	 */
 	public function update_test() : void {
+		
+		$msg = 'Test Started!';
+
+		/**
+		 * Log the message
+		 */
+		WP_CLI::log( $msg );
+
+		/**
+		 * Show success message after completion
+		 */
 		WP_CLI::success( 'Test Completed!!!' );
 	}
 
