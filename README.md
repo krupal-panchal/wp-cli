@@ -10,7 +10,7 @@ Add this repo in your theme root, and add below code to your `functions.php` to 
 /**
  * Add dependency file for WP-CLI
  */
-require_once 'wp-cli/wp-cli-commands.php';
+require_once 'wp-cli/class-wp-cli-commands.php';
 ```
 
 > Check the [wp-cli Handbook](https://make.wordpress.org/cli/handbook/) and [Commands Cookbook](https://make.wordpress.org/cli/handbook/guides/commands-cookbook/) for more details.
