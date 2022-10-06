@@ -30,6 +30,7 @@ class WP_CLI_Commands {
 	 */
 	protected function _include_files() : void {
 
+		require_once 'commands/class-wp-cli-base.php';
 		require_once 'commands/class-test-complete.php';
 		require_once 'commands/class-user-greeting.php';
 		require_once 'commands/class-article-url-replace.php';
