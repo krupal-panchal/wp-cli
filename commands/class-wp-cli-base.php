@@ -94,7 +94,7 @@ class WP_CLI_Base {
 			$msg = 'WP-CLI command run completed!';
 		}
 
-		WP_CLI::log( $msg );
+		WP_CLI::success( $msg );
 	}
 
 } // end class.
