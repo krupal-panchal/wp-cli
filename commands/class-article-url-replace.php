@@ -4,14 +4,9 @@
  *
  * @author Krupal Panchal
  */
-class Article_URL_Replace {
+class Article_URL_Replace extends WP_CLI_Base {
 
 	public const COMMAND_NAME = 'url';
-
-	/**
-	 * @var int Batch size of command run.
-	 */
-	protected int $_batch_size = 60;
 
 	/**
 	 * @var string Source URL.
@@ -22,11 +17,6 @@ class Article_URL_Replace {
 	 * @var string Target URL.
 	 */
 	protected string $_target_url = '';
-
-	/**
-	 * @var bool Dry run.
-	 */
-	protected bool $_dry_run = true;  // default to true to prevent accidental command runs.
 
 	/**
 	 * @var array Array for mapping href changes.
@@ -85,15 +75,8 @@ class Article_URL_Replace {
 			$post_type = 'post';
 		}
 
-		$command_truthy_values = [ '', 'yes', 'true', '1' ];
-
-		if ( isset( $assoc_args['dry-run'] ) ) {
-			$this->_dry_run = in_array(
-				strtolower( $assoc_args['dry-run'] ),
-				$command_truthy_values,
-				true
-			);
-		}
+		// Parse the global arguments.
+		$this->_parse_global_arguments( $assoc_args );
 
 		$this->_source_url = trailingslashit( $args[0] );
 		$this->_target_url = trailingslashit( $args[1] );
@@ -195,53 +178,6 @@ class Article_URL_Replace {
 		}
 
 	}
-
-	/**
-	 * Method to log and notify start of command run
-	 *
-	 * @return void
-	 */
-	protected function _notify_on_start() : void {
-
-		$message = sprintf(
-			'WP_CLI command has started running on %s',
-			wp_parse_url( home_url(), PHP_URL_HOST )
-		);
-
-		if ( $this->is_dry_run() ) {
-			$message = sprintf( '%s - Dry Run Started', $message );
-		}
-
-		WP_CLI::log( '' );
-		WP_CLI::log( $message );
-		WP_CLI::log( '' );
-	}
-
-	/**
-	 * Method to log and notify end of command run
-	 *
-	 * @param string $msg Message to show at the end of command run.
-	 *
-	 * @return void
-	 */
-	protected function _notify_on_done( string $msg = '' ) : void {
-
-		if ( empty( $msg ) ) {
-			$msg = 'WP-CLI command run completed!';
-		}
-
-		WP_CLI::log( $msg );
-	}
-
-	/**
-	 * Method to check if current run is dry run or not
-	 *
-	 * @return bool
-	 */
-	public function is_dry_run() : bool {
-		return (bool) ( true === $this->_dry_run );
-	}
-
 } // end class.
 
 // EOF.

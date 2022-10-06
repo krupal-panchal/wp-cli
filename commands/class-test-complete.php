@@ -6,7 +6,7 @@
  *
  * @author Krupal Panchal
  */
-class Test_Complete {
+class Test_Complete extends WP_CLI_Base {
 
 	public const COMMAND_NAME = 'test';
 
@@ -26,7 +26,7 @@ class Test_Complete {
 	 * @return void
 	 */
 	public function update_test() : void {
-		
+
 		$msg = 'Test Started!';
 
 		/**

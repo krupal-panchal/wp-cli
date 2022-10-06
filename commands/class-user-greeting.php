@@ -4,7 +4,7 @@
  *
  * @author Krupal Panchal
  */
-class User_Greeting {
+class User_Greeting extends WP_CLI_Base {
 
 	public const COMMAND_NAME = 'user';
 
@@ -13,7 +13,7 @@ class User_Greeting {
 	 *
 	 * ## OPTIONS
 	 *
-	 * <user_name>
+	 * <user_name>...
 	 * : Name of user
 	 *
 	 * [--call=<call>]
@@ -21,20 +21,20 @@ class User_Greeting {
 	 * ---
 	 * default: Mr.
 	 * options:
-	 * - Mr.
-	 * - Ms.
-	 * - Mrs.
+	 * 	- Mr.
+	 * 	- Ms.
+	 * 	- Mrs.
 	 * ---
 	 *
 	 * ## EXAMPLES
 	 *
 	 * # User Greeting with name only.
-	 * $ wp user greeting User
-	 * Success: Hello User!
+	 * $ wp user greeting <user>
+	 * Success: Hello <User>!
 	 *
 	 * # User Greetings with call.
 	 * $ wp user greetings User --call=Mr./Mrs./Ms.
-	 * Success: Hello Mr./Mrs./Ms. User!
+	 * Success: Hello Mr./Mrs./Ms. <User>!
 	 *
 	 * @subcommand greeting
 	 *
@@ -45,13 +45,15 @@ class User_Greeting {
 	 */
 	public function greeting( array $args, array $assoc_args ) : void {
 
-		list( $user ) = $args;
+		list( $name ) = $args;
+
+		$name = implode( ' ', $args );
 
 		if ( ! empty( $assoc_args['call'] ) ) {
 			$call = $assoc_args['call'];
 		}
 
-		WP_CLI::success( "Hello {$call} {$user}!" );
+		WP_CLI::success( "Hello, {$call} {$name}!" );
 	}
 
 } // end class.
