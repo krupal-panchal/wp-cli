@@ -2,7 +2,7 @@
 /**
  * Register of all WP Commands
  *
- * @author  Krupal Panchal
+ * @author Krupal Panchal
  */
 class WP_CLI_Commands {
 
