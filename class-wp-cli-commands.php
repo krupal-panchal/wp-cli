@@ -1,15 +1,18 @@
 <?php
 /**
  * Register of all WP Commands
- * 
+ *
  * @author  Krupal Panchal
  */
-
 class WP_CLI_Commands {
 
+	/**
+	 * @var array Class of all commands.
+	 */
 	protected array $_commands = [
 		Test_Complete::class,
 		User_Greeting::class,
+		Article_URL_Replace::class,
 	];
 
 	/**
@@ -22,16 +25,21 @@ class WP_CLI_Commands {
 
 	/**
 	 * Method to include command files
+	 *
+	 * @return void
 	 */
 	protected function _include_files() : void {
 
 		require_once 'commands/class-test-complete.php';
 		require_once 'commands/class-user-greeting.php';
+		require_once 'commands/class-article-url-replace.php';
 
 	}
 
 	/**
 	 * Method to register custom commands with WP-CLI
+	 *
+	 * @return void
 	 */
 	protected function _regiser_commands() : void {
 
@@ -47,8 +55,8 @@ class WP_CLI_Commands {
 		}
 	}
 
-} // end class
+} // end class.
 
 $wp_cli_obj = new WP_CLI_Commands();
 
-// EOF
+// EOF.
