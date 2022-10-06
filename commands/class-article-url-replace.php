@@ -29,6 +29,11 @@ class Article_URL_Replace {
 	protected bool $_dry_run = true;  // default to true to prevent accidental command runs.
 
 	/**
+	 * @var array Array for mapping href changes.
+	 */
+	protected array $_href_change_mapping = [];
+
+	/**
 	 * Command for replace link
 	 *
 	 * <source_url>
@@ -54,24 +59,17 @@ class Article_URL_Replace {
 	 * : Get articles with changed slug
 	 *
 	 * ## EXAMPLES
-	 *
-	 * # User Greeting with name only.
-	 * $ wp user greeting User
-	 * Success: Hello User!
 	 * 
-	 * # User Greetings with call.
-	 * $ wp user greetings User --call=Mr./Mrs./Ms.
-	 * Success: Hello Mr./Mrs./Ms. User!
+	 * # replace URL within post content.
+	 * $ wp url replace <source_url> <target_url> --dry-run=false
+	 * Success: URLs updated!!
 	 *
 	 * @subcommand replace
-	 * 
-	 * @param array $args
-	 * @param array $assoc_args
 	 *
+	 * @param array $args       Arguments.
+	 * @param array $assoc_args Associate arguments.
 	 */
 	public function replace( array $args, array $assoc_args ) : void {
-
-		$this->_sub_command_name = __FUNCTION__;
 
 		list( $urls ) = $args;
 
@@ -97,8 +95,8 @@ class Article_URL_Replace {
 			);
 		}
 
-		$this->_source_url = $args[0];
-		$this->_target_url = $args[1];
+		$this->_source_url = trailingslashit( $args[0] );
+		$this->_target_url = trailingslashit( $args[1] );
 
 		$this->_notify_on_start();
 
@@ -131,58 +129,51 @@ class Article_URL_Replace {
 
 				$anchor_tags = $doc->getElementsByTagName( 'a' );
 
-				$href_change_mapping = [];
-
 				foreach ( $anchor_tags as $index => $a_tag ) {
-					$href = $a_tag->getAttribute( 'href' );
+					$href = trailingslashit( $a_tag->getAttribute( 'href' ) );
 					
 					$source_url = $this->_source_url;
 					$target_url = $this->_target_url;
 
-					$source_match_found = false;
-
 					if ( $href === $source_url ) {
-						$source_match_found = true;
-					}
+						$new_url = str_replace( $source_url, $target_url, $target_url );
 
-					$new_url = str_replace( $source_url, $target_url, $target_url );
+						if ( $source_url !== $new_url ) {
+							$this->_href_change_mapping[ $source_url ] = $new_url;
+						}
 
-					if ( $source_match_found || ( $all_links && $source_url !== $target_url ) ) {
+						if ( ! empty( $this->_href_change_mapping ) ) {
 
-						$href_change_mapping[ $source_url ] = $target_url;
-					}
-						
-					if ( ! empty( $href_change_mapping ) ) {
-
-						$update_count++;
-
-						WP_CLI::log(
-							sprintf( ' %d) Post ID: %d ', ( $update_count ), $posts[ $i ]->ID )
-						);
-
-						WP_CLI::log( sprintf( ' Slug: %s', $posts[ $i ]->post_name ) );
-						WP_CLI::log( sprintf( '------------ -----------' ) );
-
-						$content = $posts[ $i ]->post_content;
-
-						foreach ( $href_change_mapping as $old_link => $new_link ) {
-
-							WP_CLI::log( sprintf( ' Old URL - [%s]', $old_link ) );
-							WP_CLI::log( sprintf( ' New URL - [%s]', $new_link ) );
+							$update_count++;
+	
+							WP_CLI::log(
+								sprintf( ' %d) Post ID: %d ', ( $update_count ), $posts[ $i ]->ID )
+							);
+	
+							WP_CLI::log( sprintf( ' Slug: %s', $posts[ $i ]->post_name ) );
 							WP_CLI::log( sprintf( '------------ -----------' ) );
-							WP_CLI::log( sprintf( '' ) );
-
-							$content = str_replace( $old_link, $new_link, $content );
-
-							if ( ! $this->is_dry_run() ) {
-
-								wp_update_post(
-									array(
-										'ID'           => $posts[ $i ]->ID,
-										'post_content' => $content,
-									),
-									true
-								);
+	
+							$content = $posts[ $i ]->post_content;
+	
+							foreach ( $this->_href_change_mapping as $old_link => $new_link ) {
+	
+								WP_CLI::log( sprintf( ' Old URL - [%s]', $old_link ) );
+								WP_CLI::log( sprintf( ' New URL - [%s]', $new_link ) );
+								WP_CLI::log( sprintf( '------------ -----------' ) );
+								WP_CLI::log( sprintf( '' ) );
+	
+								$content = str_replace( $old_link, $new_link, $content );
+	
+								if ( ! $this->is_dry_run() ) {
+	
+									wp_update_post(
+										array(
+											'ID'           => $posts[ $i ]->ID,
+											'post_content' => $content,
+										),
+										true
+									);
+								}
 							}
 						}
 					}
@@ -193,11 +184,16 @@ class Article_URL_Replace {
 
 		} while ( $posts_count === $this->_batch_size );
 
-		if ( ! $this->is_dry_run() ) {
-			$this->_notify_on_done( 'URLs are updated!' );
+		if ( empty( $this->_href_change_mapping ) ) {
+			WP_CLI::log( 'No any post found to replace given URL!' );
 		} else {
-			$this->_notify_on_done( 'These URLs will be udpated!' );
+			if ( ! $this->is_dry_run() ) {
+				$this->_notify_on_done( 'URLs updated!' );
+			} else {
+				$this->_notify_on_done( 'Dry run ended - These URLs will be udpated!' );
+			}
 		}
+
 	}
 
 	/**

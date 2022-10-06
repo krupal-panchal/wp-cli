@@ -1,29 +1,29 @@
 <?php
 /**
  * Class for testing purpose
- * 
+ *
  * Command `test`
- * 
+ *
  * @author Krupal Panchal
  */
-
 class Test_Complete {
 
 	public const COMMAND_NAME = 'test';
 
 	/**
 	 * Command for testing purpose
-	 * 
+	 *
 	 * ## OPTIONS
-	 * 
+	 *
 	 * ## EXAMPLES
-	 * 
-	 *      # Complete the test.
-	 *      $ wp test update-test
-	 *      Success: Test Completed!!!
-	 * 
+	 *
+	 * # Complete the test.
+	 * $ wp test update-test
+	 * Success: Test Completed!!!
+	 *
 	 * @subcommand update-test
-	 * 
+	 *
+	 * @return void
 	 */
 	public function update_test() : void {
 		
@@ -40,6 +40,6 @@ class Test_Complete {
 		WP_CLI::success( 'Test Completed!!!' );
 	}
 
-} // end class
+} // end class.
 
-// EOF
+// EOF.
