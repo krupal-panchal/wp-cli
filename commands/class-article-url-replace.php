@@ -161,6 +161,7 @@ class Article_URL_Replace extends WP_CLI_Base {
 						}
 					}
 					$count++;
+					$this->_update_iteration();
 				}
 			}
 			$page++;
