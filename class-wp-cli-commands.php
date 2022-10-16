@@ -13,6 +13,7 @@ class WP_CLI_Commands {
 		Test_Complete::class,
 		User_Greeting::class,
 		Article_URL_Replace::class,
+		Add_Category_Tag::class,
 	];
 
 	/**
@@ -34,6 +35,7 @@ class WP_CLI_Commands {
 		require_once 'commands/class-test-complete.php';
 		require_once 'commands/class-user-greeting.php';
 		require_once 'commands/class-article-url-replace.php';
+		require_once 'commands/class-add-category-tag.php';
 
 	}
 
