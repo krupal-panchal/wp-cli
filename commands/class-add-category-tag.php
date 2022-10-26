@@ -9,6 +9,11 @@ class Add_Category_Tag extends WP_CLI_Base {
 	public const COMMAND_NAME = 'category';
 
 	/**
+	 * @var array Array for mapping href changes.
+	 */
+	public array $category_mapping = [];
+
+	/**
 	 * Command for category update
 	 *
 	 * <tag>
@@ -28,7 +33,7 @@ class Add_Category_Tag extends WP_CLI_Base {
 	 *  - true
 	 *
 	 * ## EXAMPLES
-	 * 
+	 *
 	 * # add category according tag.
 	 * $ wp category add <tag> <category> --dry-run=false
 	 * Success: Category Added!!
@@ -37,16 +42,16 @@ class Add_Category_Tag extends WP_CLI_Base {
 	 *
 	 * @param array $args       Arguments.
 	 * @param array $assoc_args Associate arguments.
-	 * 
+	 *
 	 * @return void
 	 */
 	public function add( array $args, array $assoc_args ) : void {
 
-		list( $urls ) = $args;
+		list( $slug ) = $args;
 
 		$post_type = 'post';
 
-		$tag = $args[0];
+		$tag      = $args[0];
 		$category = $args[1];
 
 		$tag_id = get_term_by( 'slug', $tag, 'post_tag' )->term_id;
@@ -78,47 +83,62 @@ class Add_Category_Tag extends WP_CLI_Base {
 				'post_status'      => [ 'any', 'draft' ],
 			];
 
+			$update_count = 0;
+
 			do {
 				$post_args['paged'] = $page;
-	
+
 				$posts = get_posts( $post_args );
-	
+
 				if ( empty( $posts ) ) {
 					break;
 				}
 
 				$posts_count = count( $posts );
-	
+
 				for ( $i = 0; $i < $posts_count; $i++ ) {
 
-					$update_count++;
+					$post_id = $posts[ $i ]->ID;
 
-					WP_CLI::log(
-						sprintf( ' %d) Post ID: %d -> Category Added.', ( $update_count ), $posts[ $i ]->ID )
-					);
-					
-					if ( ! $this->is_dry_run() ) {
-	
-						wp_set_post_categories(
-							$posts[ $i ]->ID,
-							$cat_id,
-							true
-						);
+					if ( has_term( $tag_id, 'post_tag', $post_id ) ) {
+
+						if ( ! has_term( $cat_id, 'category', $post_id ) ) {
+
+							$this->category_mapping[] = $post_id;
+
+							$update_count++;
+
+							WP_CLI::log(
+								sprintf( ' %d) Post ID: %d -> Category Added.', ( $update_count ), $post_id )
+							);
+
+							if ( ! $this->is_dry_run() ) {
+								wp_set_post_categories(
+									$post_id,
+									$cat_id,
+									true
+								);
+							}
+						}
 					}
 
 					$count++;
 					$this->_update_iteration();
 				}
 				$page++;
-	
+
 			} while ( $posts_count === $this->_batch_size );
 
-			if ( ! $this->is_dry_run() ) {
-				WP_CLI::log('');
-				$this->_notify_on_done( 'Category added in these posts!' );
+			if ( 1 > count( $this->category_mapping ) ) {
+				WP_CLI::log( 'No any post found to update category!' );
 			} else {
-				WP_CLI::log('');
-				$this->_notify_on_done( 'Dry run ended - Category will be added in these posts.' );
+				if ( ! $this->is_dry_run() ) {
+					WP_CLI::log( '' );
+					$this->_notify_on_done( 'Category added in these posts!' );
+				} else {
+					WP_CLI::log( '' );
+					$this->_notify_on_done( 'Dry run ended - Category will be added in these posts.' );
+				}
 			}
 		}
 	}
