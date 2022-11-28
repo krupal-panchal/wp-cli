@@ -60,6 +60,6 @@ class WP_CLI_Commands {
 
 } // end class.
 
-$wp_cli_obj = new WP_CLI_Commands();
+new WP_CLI_Commands();
 
 // EOF.

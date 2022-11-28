@@ -33,7 +33,7 @@ class User_Greeting extends WP_CLI_Base {
 	 * Success: Hello, Mr. <User>!
 	 *
 	 * # User Greetings with call.
-	 * $ wp user greetings User --call=Mr./Mrs./Ms.
+	 * $ wp user greeting <USER> --call=Mr./Mrs./Ms.
 	 * Success: Hello, Mr./Mrs./Ms. <User>!
 	 *
 	 * @subcommand greeting
