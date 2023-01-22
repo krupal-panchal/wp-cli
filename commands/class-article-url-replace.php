@@ -91,7 +91,7 @@ class Article_URL_Replace extends WP_CLI_Base {
 			'orderby'          => 'ID',
 			'order'            => 'ASC',
 			'suppress_filters' => false,
-			'post_status'      => [ 'any', 'draft' ],
+			'post_status'      => [ 'any' ],
 		];
 
 		do {
@@ -160,6 +160,7 @@ class Article_URL_Replace extends WP_CLI_Base {
 							}
 						}
 					}
+					
 					$count++;
 					$this->_update_iteration();
 				}

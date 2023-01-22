@@ -88,7 +88,7 @@ class WP_CLI_Base {
 		);
 
 		if ( $this->is_dry_run() ) {
-			$message = sprintf( '%s - Dry Run Started', $message );
+			$message = sprintf( '%s - Dry Run Started.', $message );
 		}
 
 		WP_CLI::log( '' );

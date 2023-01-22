@@ -14,6 +14,7 @@ class WP_CLI_Commands {
 		User_Greeting::class,
 		Article_URL_Replace::class,
 		Add_Category_Tag::class,
+		Post_Check::class,
 	];
 
 	/**
@@ -36,7 +37,7 @@ class WP_CLI_Commands {
 		require_once 'commands/class-user-greeting.php';
 		require_once 'commands/class-article-url-replace.php';
 		require_once 'commands/class-add-category-tag.php';
-
+		require_once 'commands/class-post-check.php';
 	}
 
 	/**

@@ -80,7 +80,7 @@ class Add_Category_Tag extends WP_CLI_Base {
 				'orderby'          => 'ID',
 				'order'            => 'ASC',
 				'suppress_filters' => false,
-				'post_status'      => [ 'any', 'draft' ],
+				'post_status'      => [ 'any' ],
 			];
 
 			$update_count = 0;
