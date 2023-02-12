@@ -28,7 +28,7 @@ class Post_Check extends WP_CLI_Base {
 	 * 
 	 * # Get Post Title.
 	 * $ wp post get-title --dry-run=false
-	 * Success: URLs updated!!
+	 * Success: All Post title fetched!!
 	 *
 	 * @subcommand get-title
 	 *
@@ -91,12 +91,13 @@ class Post_Check extends WP_CLI_Base {
             $page++;
             
         } while ( $posts_count === $this->_batch_size );
+
+		if ( ! $this->is_dry_run() ) {
+			$this->_notify_on_done( 'Post Titles!' );
+		} else {
+			$this->_notify_on_done( 'Dry run ended - These are the post titles.' );
+		}
     }
 
-    /* if ( ! $this->is_dry_run() ) {
-        $this->_notify_on_done( 'Post titles!' );
-    } else {
-        $this->_notify_on_done( 'Dry run ended - These are the post titles.' );
-    } */
 
 } // End Class.
