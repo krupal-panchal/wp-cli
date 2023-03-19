@@ -107,62 +107,67 @@ class Article_URL_Replace extends WP_CLI_Base {
 
 			for ( $i = 0; $i < $posts_count; $i++ ) {
 
-				$doc = new \DOMDocument();
-				$doc->loadHTML( $posts[ $i ]->post_content, LIBXML_NOERROR );
+				$doc          = new \DOMDocument();
+				$post_content = $posts[ $i ]->post_content;
 
-				$anchor_tags = $doc->getElementsByTagName( 'a' );
+				if ( ! empty( $post_content ) ) {
 
-				foreach ( $anchor_tags as $index => $a_tag ) {
-					$href = trailingslashit( $a_tag->getAttribute( 'href' ) );
-					
-					$source_url = $this->_source_url;
-					$target_url = $this->_target_url;
+					$doc->loadHTML( $post_content, LIBXML_NOERROR );
 
-					if ( $href === $source_url ) {
-						$new_url = str_replace( $source_url, $target_url, $target_url );
+					$anchor_tags = $doc->getElementsByTagName( 'a' );
 
-						if ( $source_url !== $new_url ) {
-							$this->_href_change_mapping[ $source_url ] = $new_url;
-						}
+					foreach ( $anchor_tags as $index => $a_tag ) {
+						$href = trailingslashit( $a_tag->getAttribute( 'href' ) );
+						
+						$source_url = $this->_source_url;
+						$target_url = $this->_target_url;
 
-						if ( ! empty( $this->_href_change_mapping ) ) {
+						if ( $href === $source_url ) {
+							$new_url = str_replace( $source_url, $target_url, $target_url );
 
-							$update_count++;
-	
-							WP_CLI::log(
-								sprintf( ' %d) Post ID: %d ', ( $update_count ), $posts[ $i ]->ID )
-							);
-	
-							WP_CLI::log( sprintf( ' Slug: %s', $posts[ $i ]->post_name ) );
-							WP_CLI::log( sprintf( '------------ -----------' ) );
-	
-							$content = $posts[ $i ]->post_content;
-	
-							foreach ( $this->_href_change_mapping as $old_link => $new_link ) {
-	
-								WP_CLI::log( sprintf( ' Old URL - [%s]', $old_link ) );
-								WP_CLI::log( sprintf( ' New URL - [%s]', $new_link ) );
+							if ( $source_url !== $new_url ) {
+								$this->_href_change_mapping[ $source_url ] = $new_url;
+							}
+
+							if ( ! empty( $this->_href_change_mapping ) ) {
+
+								$update_count++;
+		
+								WP_CLI::log(
+									sprintf( ' %d) Post ID: %d ', ( $update_count ), $posts[ $i ]->ID )
+								);
+		
+								WP_CLI::log( sprintf( ' Slug: %s', $posts[ $i ]->post_name ) );
 								WP_CLI::log( sprintf( '------------ -----------' ) );
-								WP_CLI::log( sprintf( '' ) );
-	
-								$content = str_replace( $old_link, $new_link, $content );
-	
-								if ( ! $this->is_dry_run() ) {
-	
-									wp_update_post(
-										array(
-											'ID'           => $posts[ $i ]->ID,
-											'post_content' => $content,
-										),
-										true
-									);
+		
+								$content = $posts[ $i ]->post_content;
+		
+								foreach ( $this->_href_change_mapping as $old_link => $new_link ) {
+		
+									WP_CLI::log( sprintf( ' Old URL - [%s]', $old_link ) );
+									WP_CLI::log( sprintf( ' New URL - [%s]', $new_link ) );
+									WP_CLI::log( sprintf( '------------ -----------' ) );
+									WP_CLI::log( sprintf( '' ) );
+		
+									$content = str_replace( $old_link, $new_link, $content );
+		
+									if ( ! $this->is_dry_run() ) {
+		
+										wp_update_post(
+											array(
+												'ID'           => $posts[ $i ]->ID,
+												'post_content' => $content,
+											),
+											true
+										);
+									}
 								}
 							}
 						}
+						
+						$count++;
+						$this->_update_iteration();
 					}
-					
-					$count++;
-					$this->_update_iteration();
 				}
 			}
 			$page++;

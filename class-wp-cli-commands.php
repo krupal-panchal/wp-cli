@@ -21,23 +21,29 @@ class WP_CLI_Commands {
 	 * Class Constructor
 	 */
 	public function __construct() {
-		$this->_include_files();
+
+		// Autoload.
+		spl_autoload_register( [ $this, 'wp_cli_command_autoload' ] );
+
+		// Register all Commands.
 		$this->_regiser_commands();
 	}
 
 	/**
-	 * Method to include command files
-	 *
+	 * Method to autoload all command class.
+	 * 
+	 * @param string $class
+	 * 
 	 * @return void
 	 */
-	protected function _include_files() : void {
+	public function wp_cli_command_autoload( string $class ) : void {
 
-		require_once 'commands/class-wp-cli-base.php';
-		require_once 'commands/class-test-complete.php';
-		require_once 'commands/class-user-greeting.php';
-		require_once 'commands/class-article-url-replace.php';
-		require_once 'commands/class-add-category-tag.php';
-		require_once 'commands/class-post-check.php';
+		$class = str_replace( '_', '-', $class );
+		$class = strtolower( $class );
+		
+		$get_file = get_template_directory() . "/wp-cli/commands/class-$class.php";
+
+		file_exists( $get_file ) ? require_once $get_file : '';
 	}
 
 	/**
