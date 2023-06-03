@@ -28,7 +28,7 @@ class Test_Complete extends WP_CLI_Base {
 	public function update_test() : void {
 
 		$msg = 'Test Started!';
-		$data = date();
+		$data = gmdate();
 
 		/**
 		 * Log the message
