@@ -49,7 +49,7 @@ class Article_URL_Replace extends WP_CLI_Base {
 	 * : Get articles with changed slug
 	 *
 	 * ## EXAMPLES
-	 * 
+	 *
 	 * # replace URL within post content.
 	 * $ wp url replace <source_url> <target_url> --dry-run=false
 	 * Success: URLs updated!!
@@ -118,7 +118,7 @@ class Article_URL_Replace extends WP_CLI_Base {
 
 					foreach ( $anchor_tags as $index => $a_tag ) {
 						$href = trailingslashit( $a_tag->getAttribute( 'href' ) );
-						
+
 						$source_url = $this->_source_url;
 						$target_url = $this->_target_url;
 
@@ -132,27 +132,27 @@ class Article_URL_Replace extends WP_CLI_Base {
 							if ( ! empty( $this->_href_change_mapping ) ) {
 
 								$update_count++;
-		
+
 								WP_CLI::log(
 									sprintf( ' %d) Post ID: %d ', ( $update_count ), $posts[ $i ]->ID )
 								);
-		
+
 								WP_CLI::log( sprintf( ' Slug: %s', $posts[ $i ]->post_name ) );
 								WP_CLI::log( sprintf( '------------ -----------' ) );
-		
+
 								$content = $posts[ $i ]->post_content;
-		
+
 								foreach ( $this->_href_change_mapping as $old_link => $new_link ) {
-		
+
 									WP_CLI::log( sprintf( ' Old URL - [%s]', $old_link ) );
 									WP_CLI::log( sprintf( ' New URL - [%s]', $new_link ) );
 									WP_CLI::log( sprintf( '------------ -----------' ) );
 									WP_CLI::log( sprintf( '' ) );
-		
+
 									$content = str_replace( $old_link, $new_link, $content );
-		
+
 									if ( ! $this->is_dry_run() ) {
-		
+
 										wp_update_post(
 											array(
 												'ID'           => $posts[ $i ]->ID,
@@ -164,7 +164,7 @@ class Article_URL_Replace extends WP_CLI_Base {
 								}
 							}
 						}
-						
+
 						$count++;
 						$this->_update_iteration();
 					}

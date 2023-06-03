@@ -6,9 +6,9 @@
  */
 class Post_Check extends WP_CLI_Base {
 
-    public const COMMAND_NAME = 'post';
+	public const COMMAND_NAME = 'post';
 
-    /**
+	/**
 	 * Command for Post check
 	 *
 	 * ## OPTIONS
@@ -25,7 +25,7 @@ class Post_Check extends WP_CLI_Base {
 	 * : Post type of article
 	 *
 	 * ## EXAMPLES
-	 * 
+	 *
 	 * # Get Post Title.
 	 * $ wp post get-title --dry-run=false
 	 * Success: All Post title fetched!!
@@ -36,34 +36,34 @@ class Post_Check extends WP_CLI_Base {
 	 * @param array $assoc_args Associate arguments.
 	 */
 	public function get_title( array $args, array $assoc_args ) : void {
-        
-        if ( ! empty( $assoc_args['post-type'] ) ) {
+
+		if ( ! empty( $assoc_args['post-type'] ) ) {
 			$post_type = $assoc_args['post-type'];
 		} else {
 			$post_type = 'post';
 		}
 
-        // Parse the global arguments.
+		// Parse the global arguments.
 		$this->_parse_global_arguments( $assoc_args );
 
-        $this->_notify_on_start();
+		$this->_notify_on_start();
 
-        $count     = 0;
+		$count     = 0;
 		$page      = 1;
 		$post_args = [
-            'post_type'        => $post_type,
+			'post_type'        => $post_type,
 			'posts_per_page'   => $this->_batch_size,
 			'orderby'          => 'ID',
 			'order'            => 'ASC',
 			'suppress_filters' => false,
 			'post_status'      => [ 'any' ],
 		];
-        
-        $update_count = 0;
+
+		$update_count = 0;
 
 		do {
 
-            $post_args['paged'] = $page;
+			$post_args['paged'] = $page;
 
 			$posts = get_posts( $post_args );
 
@@ -75,29 +75,29 @@ class Post_Check extends WP_CLI_Base {
 
 			for ( $i = 0; $i < $posts_count; $i++ ) {
 
-                $count++;
+				$count++;
 
-                WP_CLI::log(
-                    sprintf(
-                        '%d) Title - %s',
-                        $count,
-                        $posts[ $i ]->post_title
-                    )
-                );
+				WP_CLI::log(
+					sprintf(
+						'%d) Title - %s',
+						$count,
+						$posts[ $i ]->post_title
+					)
+				);
 
-                $this->_update_iteration();
-            }
+				$this->_update_iteration();
+			}
 
-            $page++;
-            
-        } while ( $posts_count === $this->_batch_size );
+			$page++;
+
+		} while ( $posts_count === $this->_batch_size );
 
 		if ( ! $this->is_dry_run() ) {
 			$this->_notify_on_done( 'Post Titles!' );
 		} else {
 			$this->_notify_on_done( 'Dry run ended - These are the post titles.' );
 		}
-    }
+	}
 
 
 } // End Class.

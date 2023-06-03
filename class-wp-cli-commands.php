@@ -31,16 +31,16 @@ class WP_CLI_Commands {
 
 	/**
 	 * Method to autoload all command class.
-	 * 
+	 *
 	 * @param string $class
-	 * 
+	 *
 	 * @return void
 	 */
 	public function wp_cli_command_autoload( string $class ) : void {
 
 		$class = str_replace( '_', '-', $class );
 		$class = strtolower( $class );
-		
+
 		$get_file = get_template_directory() . "/wp-cli/commands/class-$class.php";
 
 		file_exists( $get_file ) ? require_once $get_file : '';
