@@ -32,7 +32,7 @@ class WP_CLI_Commands {
 	/**
 	 * Method to autoload all command class.
 	 *
-	 * @param string $class
+	 * @param string $class Class name.
 	 *
 	 * @return void
 	 */
