@@ -12,7 +12,6 @@ class WP_CLI_Commands {
 	protected array $_commands = [
 		Test_Complete::class,
 		User_Greeting::class,
-		Article_URL_Replace::class,
 		Add_Category_Tag::class,
 		Post_Check::class,
 	];
