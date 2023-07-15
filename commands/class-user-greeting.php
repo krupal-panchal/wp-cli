@@ -21,9 +21,9 @@ class User_Greeting extends WP_CLI_Base {
 	 * ---
 	 * default: Mr.
 	 * options:
-	 * 	- Mr.
-	 * 	- Ms.
-	 * 	- Mrs.
+	 *  - Mr.
+	 *  - Ms.
+	 *  - Mrs.
 	 * ---
 	 *
 	 * ## EXAMPLES
