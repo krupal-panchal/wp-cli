@@ -1,5 +1,12 @@
 ## WP CLI Learning
 
+## License
+
+This project is licensed under the GNU General Public License v2 or later.
+
+License URI:
+https://www.gnu.org/licenses/gpl-2.0.html
+
 ### This is simple WP CLI repo for learning purpose, which I have created.
 
 If you want to learn something more you can simply fork this repo and update according your need.
